@@ -2,16 +2,18 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Function to load and display histogram
+# Function to load and display histogram with legend
 def show_histogram(df):
     fig, ax = plt.subplots()
     df['Values'].hist(ax=ax)
+    ax.legend(['Values'])
     st.pyplot(fig)
 
-# Function to load and display pie chart
+# Function to load and display pie chart with legend
 def show_pie_chart(df):
     fig, ax = plt.subplots()
-    df.groupby('Category')['Frequency'].sum().plot(kind='pie', ax=ax)
+    pie = df.groupby('Category')['Frequency'].sum().plot(kind='pie', ax=ax, autopct='%1.1f%%')
+    ax.legend(pie.get_label(), loc="best")
     st.pyplot(fig)
 
 # Main script
