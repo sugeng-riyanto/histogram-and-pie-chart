@@ -2,6 +2,28 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
+from io import BytesIO
+
+# Function to generate sample data and return as a DataFrame
+def generate_sample_data():
+    np.random.seed(42)
+    categories = ['A', 'B', 'C', 'D', 'E']
+    data = {
+        'Category': np.random.choice(categories, size=100),
+        'Values': np.random.randint(10, 100, size=100),
+        'Frequency': np.random.randint(1, 10, size=100),
+        'Depth': np.random.randint(1, 50, size=100)
+    }
+    return pd.DataFrame(data)
+
+# Function to download DataFrame as an Excel file
+def download_excel_file(df):
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    df.to_excel(writer, index=False, sheet_name='Sheet1')
+    writer.save()
+    processed_data = output.getvalue()
+    return processed_data
 
 # Function to load and display histogram with legend
 def show_histogram(df):
@@ -47,36 +69,49 @@ def show_scatter_plot(df):
 
 # Function to load and display 3D scatter plot
 def show_3d_scatter_plot(df):
-    fig = px.scatter_3d(df, x='Values', y='Frequency', z='Category', color='Category', title='3D Scatter Plot of Values, Frequency, and Category')
+    fig = px.scatter_3d(df, x='Values', y='Frequency', z='Depth', color='Category', title='3D Scatter Plot of Values, Frequency, and Depth')
     st.plotly_chart(fig)
 
 # Main script
 st.sidebar.title('Options')
-page_type = st.sidebar.selectbox('Select visualization type', ['2D Visualization', '3D Visualization'])
+menu = st.sidebar.selectbox('Select menu', ['Generate Sample Data', '2D Visualization', '3D Visualization'])
 
-if page_type == '2D Visualization':
-    page = st.sidebar.selectbox('Select page', ['Histogram', 'Pie Chart', 'Bar Chart', 'Line Chart', 'Scatter Plot'])
+if menu == 'Generate Sample Data':
+    if st.sidebar.button('Generate and Download Sample Data'):
+        df = generate_sample_data()
+        st.sidebar.write("Sample data generated. Click below to download.")
+        st.sidebar.download_button(
+            label="Download Sample Data",
+            data=download_excel_file(df),
+            file_name="sample_data.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
 else:
-    page = st.sidebar.selectbox('Select page', ['3D Scatter Plot'])
+    page_type = st.sidebar.selectbox('Select visualization type', ['2D Visualization', '3D Visualization'])
 
-st.title('Upload your Excel file')
+    if page_type == '2D Visualization':
+        page = st.sidebar.selectbox('Select page', ['Histogram', 'Pie Chart', 'Bar Chart', 'Line Chart', 'Scatter Plot'])
+    else:
+        page = st.sidebar.selectbox('Select page', ['3D Scatter Plot'])
 
-uploaded_file = st.file_uploader('Choose an XLSX file', type='xlsx')
+    st.title('Upload your Excel file')
 
-if uploaded_file:
-    df = pd.read_excel(uploaded_file)
+    uploaded_file = st.file_uploader('Choose an XLSX file', type='xlsx')
 
-    if page == 'Histogram':
-        show_histogram(df)
-    elif page == 'Pie Chart':
-        show_pie_chart(df)
-    elif page == 'Bar Chart':
-        show_bar_chart(df)
-    elif page == 'Line Chart':
-        show_line_chart(df)
-    elif page == 'Scatter Plot':
-        show_scatter_plot(df)
-    elif page == '3D Scatter Plot':
-        show_3d_scatter_plot(df)
-else:
-    st.write("Please upload an Excel file to proceed.")
+    if uploaded_file:
+        df = pd.read_excel(uploaded_file)
+
+        if page == 'Histogram':
+            show_histogram(df)
+        elif page == 'Pie Chart':
+            show_pie_chart(df)
+        elif page == 'Bar Chart':
+            show_bar_chart(df)
+        elif page == 'Line Chart':
+            show_line_chart(df)
+        elif page == 'Scatter Plot':
+            show_scatter_plot(df)
+        elif page == '3D Scatter Plot':
+            show_3d_scatter_plot(df)
+    else:
+        st.write("Please upload an Excel file to proceed.")
