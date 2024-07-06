@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 # Function to load and display histogram with legend
 def show_histogram(df):
@@ -44,9 +45,19 @@ def show_scatter_plot(df):
     ax.set_ylabel('Frequency')
     st.pyplot(fig)
 
+# Function to load and display 3D scatter plot
+def show_3d_scatter_plot(df):
+    fig = px.scatter_3d(df, x='Values', y='Frequency', z='Category', color='Category', title='3D Scatter Plot of Values, Frequency, and Category')
+    st.plotly_chart(fig)
+
 # Main script
 st.sidebar.title('Options')
-page = st.sidebar.selectbox('Select page', ['Histogram', 'Pie Chart', 'Bar Chart', 'Line Chart', 'Scatter Plot'])
+page_type = st.sidebar.selectbox('Select visualization type', ['2D Visualization', '3D Visualization'])
+
+if page_type == '2D Visualization':
+    page = st.sidebar.selectbox('Select page', ['Histogram', 'Pie Chart', 'Bar Chart', 'Line Chart', 'Scatter Plot'])
+else:
+    page = st.sidebar.selectbox('Select page', ['3D Scatter Plot'])
 
 st.title('Upload your Excel file')
 
@@ -65,5 +76,7 @@ if uploaded_file:
         show_line_chart(df)
     elif page == 'Scatter Plot':
         show_scatter_plot(df)
+    elif page == '3D Scatter Plot':
+        show_3d_scatter_plot(df)
 else:
     st.write("Please upload an Excel file to proceed.")
