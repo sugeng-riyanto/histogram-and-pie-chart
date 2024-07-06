@@ -22,7 +22,7 @@ def download_excel_file(df):
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
     df.to_excel(writer, index=False, sheet_name='Sheet1')
-    writer.save()
+    writer.close()  # Use writer.close() instead of writer.save()
     processed_data = output.getvalue()
     return processed_data
 
