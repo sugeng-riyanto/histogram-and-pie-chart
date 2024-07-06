@@ -5,8 +5,19 @@ import plotly.express as px
 import numpy as np  # Import numpy
 from io import BytesIO
 
-# Function to generate sample data and return as a DataFrame
-def generate_sample_data():
+# Function to generate 2D sample data and return as a DataFrame
+def generate_sample_data_2d():
+    np.random.seed(42)
+    categories = ['A', 'B', 'C', 'D', 'E']
+    data = {
+        'Category': np.random.choice(categories, size=100),
+        'Values': np.random.randint(10, 100, size=100),
+        'Frequency': np.random.randint(1, 10, size=100)
+    }
+    return pd.DataFrame(data)
+
+# Function to generate 3D sample data and return as a DataFrame
+def generate_sample_data_3d():
     np.random.seed(42)
     categories = ['A', 'B', 'C', 'D', 'E']
     data = {
@@ -75,18 +86,30 @@ def show_3d_scatter_plot(df):
 
 # Main script
 st.sidebar.title('Options')
-menu = st.sidebar.selectbox('Select menu', ['Generate Sample Data', '2D Visualization', '3D Visualization'])
+menu = st.sidebar.selectbox('Select menu', ['Generate 2D Sample Data', 'Generate 3D Sample Data', '2D Visualization', '3D Visualization'])
 
-if menu == 'Generate Sample Data':
-    if st.sidebar.button('Generate and Download Sample Data'):
-        df = generate_sample_data()
-        st.sidebar.write("Sample data generated. Click below to download.")
+if menu == 'Generate 2D Sample Data':
+    if st.sidebar.button('Generate and Download 2D Sample Data'):
+        df = generate_sample_data_2d()
+        st.sidebar.write("2D Sample data generated. Click below to download.")
         st.sidebar.download_button(
-            label="Download Sample Data",
+            label="Download 2D Sample Data",
             data=download_excel_file(df),
-            file_name="sample_data.xlsx",
+            file_name="sample_data_2d.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
+
+elif menu == 'Generate 3D Sample Data':
+    if st.sidebar.button('Generate and Download 3D Sample Data'):
+        df = generate_sample_data_3d()
+        st.sidebar.write("3D Sample data generated. Click below to download.")
+        st.sidebar.download_button(
+            label="Download 3D Sample Data",
+            data=download_excel_file(df),
+            file_name="sample_data_3d.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
 else:
     page_type = st.sidebar.selectbox('Select visualization type', ['2D Visualization', '3D Visualization'])
 
