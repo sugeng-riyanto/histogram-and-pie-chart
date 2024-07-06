@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
+import numpy as np  # Import numpy
 from io import BytesIO
 
 # Function to generate sample data and return as a DataFrame
@@ -12,7 +13,7 @@ def generate_sample_data():
         'Category': np.random.choice(categories, size=100),
         'Values': np.random.randint(10, 100, size=100),
         'Frequency': np.random.randint(1, 10, size=100),
-        'Depth': np.random.randint(1, 50, size=100)
+        'Depth': np.random.randint(1, 50, size=100)  # Adding a new 'Depth' column for 3D visualization
     }
     return pd.DataFrame(data)
 
