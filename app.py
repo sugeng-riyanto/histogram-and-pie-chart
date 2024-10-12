@@ -4,8 +4,24 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import numpy as np  # Import numpy
 from io import BytesIO
-
+import streamlit.components.v1 as components
+# Add Google Analytics tracking code
+def add_google_analytics(ga_id):
+    analytics_script = f"""
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FXEFNWY86D"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FXEFNWY86D');
+    </script>
+    """
+    components.html(analytics_script, height=0)
 # Function to generate 2D sample data and return as a DataFrame
+# Main script
+GA_TRACKING_ID = "G-FXEFNWY86D"  # Replace with your own Google Analytics Tracking ID
+add_google_analytics(GA_TRACKING_ID)
 def generate_sample_data_2d():
     np.random.seed(42)
     categories = ['A', 'B', 'C', 'D', 'E']
