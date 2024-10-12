@@ -8,13 +8,15 @@ import streamlit.components.v1 as components
 # Add Google Analytics tracking code
 def add_google_analytics(ga_id):
     analytics_script = f"""
-    <script async src="https://www.googletagmanager.com/gtag/js?id={ga_id}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){{dataLayer.push(arguments);}}
-      gtag('js', new Date());
-      gtag('config', '{ga_id}');
-    </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FXEFNWY86D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FXEFNWY86D');
+</script>
     """
     components.html(analytics_script, height=0)
 # Function to generate 2D sample data and return as a DataFrame
